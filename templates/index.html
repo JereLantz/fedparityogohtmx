@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fi">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title></title>
+        <script src="https://unpkg.com/htmx.org@2.0.3"></script>
+        <link href="css/style.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="page">
+            <div class="header">
+                <h1>Customer creation</h1>
+            </div>
+
+            <div class="content">
+                <div class="form">
+                    <form hx-target="#tableBody" hx-swap="beforeend" hx-post="/api/addContact">
+                        <p>Enter name:</p>
+                        <input type="text" name="name" placeholder="Name">
+                        <p>Enter email:</p>
+                        <input type="email" name="email" placeholder="Email">
+                        <p>Enter country of recidence:</p>
+                        <input type="text" name="location" placeholder="Country">
+                        <br><br>
+                        <button type="submit">Submit</button>
+                    </form>
+                </div>
+                <br>
+
+                {{ block "display" .}}
+                <div id="display" class="display">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="visibility: hidden; padding: 0px;">🗑️</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Location</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            {{ range .}}
+                            <tr>
+                                <td hx-delete="/api/delContact/{{.Id}}" hx-swap="outerHTML" hx-target="closest tr" class="delBtn">🗑️</td>
+                                <td>{{ .Name }}</td>
+                                <td>{{ .Email }}</td>
+                                <td>{{ .Location }}</td>
+                            </tr>
+                            {{ end }}
+                            </tbody>
+                    </table>
+                </div>
+                {{ end }}
+            </div>
+        </div>
+    </body>
+</html>
+
+
+{{ block "tableRow" .}}
+<tr>
+    <td hx-delete="/api/delContact/{{.Id}}" hx-swap="outerHTML" hx-target="closest tr" class="delBtn">🗑️</td>
+    <td>{{ .Name }}</td>
+    <td>{{ .Email }}</td>
+    <td>{{ .Location }}</td>
+</tr>
+{{end}}
